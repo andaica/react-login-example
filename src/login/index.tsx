@@ -1,40 +1,47 @@
 import React from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import "./login.css";
+import { observer } from "mobx-react";
+import { SessionStore } from "../stores/sessionStore";
 
-class Login extends React.Component<any, any> {
-  constructor(props: any) {
+type LoginProps = {
+  store: SessionStore;
+};
+@observer
+class Login extends React.Component<LoginProps, any> {
+  constructor(props: LoginProps) {
     super(props);
-    this.state = { email: "", password: "" };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event: any) {
-    console.log("event.target: ", event.target.name);
-    this.setState({ [event.target.name]: event.target.value });
-  }
+  changeEmail = (event: any) => {
+    this.props.store.setEmail(event.target.value);
+  };
+
+  changePassword = (event: any) => {
+    this.props.store.setPassword(event.target.value);
+  };
 
   handleSubmit(event: any) {
-    alert("A state was submitted: " + JSON.stringify(this.state));
+    alert("Submit data:" + this.props.store.info);
     event.preventDefault();
   }
 
   render() {
+    const store = this.props.store
     return (
       <Container>
+        <Row>Info: {store.email}/{store.password}</Row>
         <Row className="justify-content-md-center">
           <Col sm={6}>
-            <Form onSubmit={this.handleSubmit} className="login">
+            <Form onSubmit={this.handleSubmit.bind(this)} className="login">
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control
                   type="email"
                   name="email"
                   placeholder="Enter email"
-                  value={this.state.email}
-                  onChange={this.handleChange}
+                //   value={this.state.email}
+                  onChange={this.changeEmail}
                 />
                 <Form.Text className="text-muted">
                   We'll never share your email with anyone else.
@@ -47,8 +54,8 @@ class Login extends React.Component<any, any> {
                   type="password"
                   name="password"
                   placeholder="Password"
-                  value={this.state.password}
-                  onChange={this.handleChange}
+                //   value={this.state.password}
+                  onChange={this.changePassword}
                 />
               </Form.Group>
 

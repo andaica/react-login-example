@@ -1,19 +1,23 @@
+import { observer } from "mobx-react";
 import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { SessionStore } from "../stores/sessionStore";
 import "./login.css";
 
-const Login = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+type IProps = {
+  store: SessionStore;
+};
 
+const Login = observer(({ store }: IProps) => {
   const handleChange = (event: any) => {
     console.log("event.target: ", event.target.name);
-    if (event.target.name == "email") setEmail(event.target.value);
-    if (event.target.name == "password") setPassword(event.target.value);
+    if (event.target.name == "email") store.setEmail(event.target.value);
+    console.log(store.email);
+    if (event.target.name == "password") store.setPassword(event.target.value);
   };
 
   const handleSubmit = (event: any) => {
-    alert(`A state was submitted: email: ${email}; password: ${password}`);
+    alert(`A state was submitted: email: ` + store.info);
     event.preventDefault();
   };
 
@@ -21,6 +25,7 @@ const Login = () => {
     <Container>
       <Row className="justify-content-md-center">
         <Col sm={6}>
+          <div>{store.info}</div>
           <Form onSubmit={handleSubmit} className="login">
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
@@ -28,7 +33,7 @@ const Login = () => {
                 type="email"
                 name="email"
                 placeholder="Enter email"
-                value={email}
+                value={store.email}
                 onChange={handleChange}
               />
               <Form.Text className="text-muted">
@@ -42,7 +47,7 @@ const Login = () => {
                 type="password"
                 name="password"
                 placeholder="Password"
-                value={password}
+                value={store.password}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -55,6 +60,6 @@ const Login = () => {
       </Row>
     </Container>
   );
-};
+});
 
 export default Login;

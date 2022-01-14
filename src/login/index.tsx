@@ -10,15 +10,20 @@ type IProps = {
 
 const Login = observer(({ store }: IProps) => {
   const handleChange = (event: any) => {
-    console.log("event.target: ", event.target.name);
     if (event.target.name == "email") store.setEmail(event.target.value);
-    console.log(store.email);
     if (event.target.name == "password") store.setPassword(event.target.value);
   };
 
-  const handleSubmit = (event: any) => {
-    alert(`A state was submitted: email: ` + store.info);
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
+    // alert(`A state was submitted: email: ` + store.info);
+    const response = await store.login();
+    if (response) {
+      // go to home
+    } else {
+      // alert error
+    }
+    
   };
 
   return (
@@ -30,7 +35,7 @@ const Login = observer(({ store }: IProps) => {
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control
-                type="email"
+                type="text"
                 name="email"
                 placeholder="Enter email"
                 value={store.email}
